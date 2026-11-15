@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "@/lib/db";
 import { formatBytes } from "@/lib/scanner/rules";
+import { syncPendingScans } from "@/lib/supabase/sync";
 
 export function HistoryList() {
   const records = useLiveQuery(() => db.scans.orderBy("createdAt").reverse().toArray(), []);
+  useEffect(() => { syncPendingScans().catch(() => {}); }, []);
 
   async function clearHistory() {
     if (!window.confirm("Hapus seluruh riwayat lokal di browser ini? Tindakan ini tidak dapat dibatalkan.")) return;

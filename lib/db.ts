@@ -10,6 +10,7 @@ export interface ScanRecord {
   deletedBytes: number;
   deletedFiles: number;
   remoteId?: string;
+  remoteDeletedFiles?: number;
 }
 
 export const db = new Dexie("byteclean") as Dexie & {

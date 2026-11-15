@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import Link from "next/link";
 import { db } from "@/lib/db";
+import { syncScanRecord } from "@/lib/supabase/sync";
 import { createDemoFiles } from "@/lib/scanner/demo";
 import { filesToCsv } from "@/lib/scanner/csv";
 import {
@@ -13,9 +14,9 @@ import {
 import {
   CATEGORIES,
   CATEGORY_LABELS,
-  DEFAULT_SETTINGS,
   type Category,
   type ScanFile,
+  type ScanSettings,
 } from "@/lib/scanner/types";
 import type { ScanResponse, ScanSource } from "@/lib/scanner/worker-protocol";
 
@@ -25,7 +26,7 @@ type WritableDirectory = FileSystemDirectoryHandle & {
   requestPermission(options: { mode: "readwrite" }): Promise<PermissionState>;
 };
 
-export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
+export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean; settings: ScanSettings }) {
   const [files, setFiles] = useState<ScanFile[]>(() => initialDemo ? createDemoFiles() : []);
   const [phase, setPhase] = useState<Phase>(initialDemo ? "complete" : "idle");
   const [demo, setDemo] = useState(initialDemo);
@@ -103,16 +104,18 @@ export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
         setSkippedCount(response.skippedFiles);
         setPhase("complete");
         setMessage(`Pemindaian selesai. ${response.files.length.toLocaleString("id-ID")} file diperiksa.`);
-        const saved = db.scans.add({
+        const record = {
           clientId: crypto.randomUUID(),
           createdAt: Date.now(),
           summary: calculateSummary(response.files),
-          settings: DEFAULT_SETTINGS,
+          settings,
           deletedBytes: 0,
           deletedFiles: 0,
-        });
+        };
+        const saved = db.scans.add(record);
         scanRecordPromiseRef.current = saved;
         saved.catch(() => setError("Hasil tampil, tetapi riwayat lokal tidak dapat disimpan di browser ini."));
+        saved.then((id) => syncScanRecord({ ...record, id })).catch(() => {});
         worker.terminate();
         workerRef.current = null;
       } else {
@@ -128,7 +131,7 @@ export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
       worker.terminate();
       workerRef.current = null;
     };
-    worker.postMessage({ type: "start", source, settings: DEFAULT_SETTINGS });
+    worker.postMessage({ type: "start", source, settings });
   }
 
   async function pickFolder() {
@@ -272,10 +275,12 @@ export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
     if (scanRecordPromiseRef.current) {
       try {
         const recordId = await scanRecordPromiseRef.current;
-        if (recordId !== undefined) await db.scans.update(recordId, {
-          deletedBytes: deletedBytes + bytes,
-          deletedFiles: deletedCount + deleted.size,
-        });
+        if (recordId !== undefined) {
+          const changes = { deletedBytes: deletedBytes + bytes, deletedFiles: deletedCount + deleted.size };
+          await db.scans.update(recordId, changes);
+          const record = await db.scans.get(recordId);
+          if (record) await syncScanRecord(record);
+        }
       } catch {
         // The scan remains usable even when browser storage is unavailable.
       }
