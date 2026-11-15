@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
 import Link from "next/link";
+import { db } from "@/lib/db";
 import { createDemoFiles } from "@/lib/scanner/demo";
 import { filesToCsv } from "@/lib/scanner/csv";
 import {
@@ -42,8 +43,10 @@ export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
   const [error, setError] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
   const [deletedBytes, setDeletedBytes] = useState(0);
+  const [deletedCount, setDeletedCount] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const workerRef = useRef<Worker | null>(null);
+  const scanRecordPromiseRef = useRef<Promise<number | undefined> | null>(null);
 
   useEffect(() => () => workerRef.current?.terminate(), []);
 
@@ -80,6 +83,8 @@ export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
     setSkippedCount(0);
     setHashProgress({ done: 0, total: 0 });
     setDeletedBytes(0);
+    setDeletedCount(0);
+    scanRecordPromiseRef.current = null;
     setError("");
     setMessage("");
     const worker = new Worker(new URL("../../lib/scanner/scan.worker.ts", import.meta.url), {
@@ -98,6 +103,16 @@ export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
         setSkippedCount(response.skippedFiles);
         setPhase("complete");
         setMessage(`Pemindaian selesai. ${response.files.length.toLocaleString("id-ID")} file diperiksa.`);
+        const saved = db.scans.add({
+          clientId: crypto.randomUUID(),
+          createdAt: Date.now(),
+          summary: calculateSummary(response.files),
+          settings: DEFAULT_SETTINGS,
+          deletedBytes: 0,
+          deletedFiles: 0,
+        });
+        scanRecordPromiseRef.current = saved;
+        saved.catch(() => setError("Hasil tampil, tetapi riwayat lokal tidak dapat disimpan di browser ini."));
         worker.terminate();
         workerRef.current = null;
       } else {
@@ -134,6 +149,11 @@ export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
     }
   }
 
+  function pickReadOnlyFolder() {
+    inputRef.current?.setAttribute("webkitdirectory", "");
+    inputRef.current?.click();
+  }
+
   function chooseFallback(event: ChangeEvent<HTMLInputElement>) {
     const chosen = Array.from(event.target.files ?? []);
     if (chosen.length === 0) return;
@@ -164,6 +184,8 @@ export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
     setSelectedIds(new Set());
     setIgnoredIds(new Set());
     setDeletedBytes(0);
+    setDeletedCount(0);
+    scanRecordPromiseRef.current = null;
     setError("");
     setMessage("Mode demo aktif. Data ini sintetis dan tidak berasal dari perangkat Anda.");
   }
@@ -246,6 +268,18 @@ export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
     setFiles((current) => current.filter((file) => !deleted.has(file.id)));
     setSelectedIds(new Set());
     setDeletedBytes((current) => current + bytes);
+    setDeletedCount((current) => current + deleted.size);
+    if (scanRecordPromiseRef.current) {
+      try {
+        const recordId = await scanRecordPromiseRef.current;
+        if (recordId !== undefined) await db.scans.update(recordId, {
+          deletedBytes: deletedBytes + bytes,
+          deletedFiles: deletedCount + deleted.size,
+        });
+      } catch {
+        // The scan remains usable even when browser storage is unavailable.
+      }
+    }
     setPhase("complete");
     setMessage(
       `${deleted.size} file dihapus; ${formatBytes(bytes)} dibebaskan.` +
@@ -267,11 +301,12 @@ export function ScanWorkspace({ initialDemo }: { initialDemo: boolean }) {
             Pilih folder
           </button>
           <button onClick={loadDemo} disabled={phase === "deleting"} className="rounded-xl border border-slate-300 px-5 py-3 font-semibold text-slate-800 hover:border-teal-600 disabled:opacity-50">Coba demo</button>
+          <button onClick={pickReadOnlyFolder} disabled={phase === "collecting" || phase === "hashing" || phase === "deleting"} className="px-2 py-3 text-sm font-semibold text-teal-700 hover:underline disabled:opacity-50">Pindai mode baca saja</button>
         </div>
       </div>
 
       {demo && <div className="mt-7 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900">Mode demo — seluruh file dan angka di halaman ini adalah contoh sintetis. Penghapusan tidak tersedia.</div>}
-      {rootHandle === null && hasResults && !demo && <div className="mt-7 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">Mode baca saja: browser ini mendukung pindai dan ekspor CSV, tetapi tidak memberi izin untuk menghapus file lokal.</div>}
+      {!canDelete && hasResults && !demo && <div className="mt-7 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">Mode baca saja: pindai dan ekspor CSV tersedia, tetapi hasil ini tidak memiliki izin untuk menghapus file lokal.</div>}
       {error && <p role="alert" className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
       {message && <p role="status" className="mt-5 rounded-xl border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-900">{message}</p>}
 
