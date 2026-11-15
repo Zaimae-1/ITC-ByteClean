@@ -1,6 +1,10 @@
 import Link from "next/link";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { signOut } from "@/app/auth/actions";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const client = await createSupabaseServerClient();
+  const user = client ? (await client.auth.getUser()).data.user : null;
   return (
     <header className="border-b border-slate-200 bg-white/90">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-4">
@@ -12,7 +16,7 @@ export function SiteHeader() {
           <Link href="/scan" className="text-slate-600 hover:text-teal-700">Pindai</Link>
           <Link href="/history" className="text-slate-600 hover:text-teal-700">Riwayat</Link>
           <Link href="/score" className="hidden text-slate-600 hover:text-teal-700 sm:inline">Tentang skor</Link>
-          <Link href="/auth" className="rounded-lg border border-slate-300 px-3 py-2 text-slate-800 hover:border-teal-600">Masuk</Link>
+          {user ? <><Link href="/account" className="rounded-lg border border-slate-300 px-3 py-2 text-slate-800 hover:border-teal-600">Organisasi</Link><form action={signOut}><button className="text-slate-600 hover:text-teal-700">Keluar</button></form></> : <Link href="/auth" className="rounded-lg border border-slate-300 px-3 py-2 text-slate-800 hover:border-teal-600">Masuk</Link>}
         </nav>
       </div>
     </header>
