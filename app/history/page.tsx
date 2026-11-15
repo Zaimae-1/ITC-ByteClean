@@ -1,10 +1,8 @@
-import { SiteHeader } from "../components/site-header";
 import { HistoryList } from "./history-list";
 
 export default function HistoryPage() {
   return (
     <>
-      <SiteHeader />
       <main className="mx-auto max-w-5xl px-5 py-12 sm:py-16">
         <p className="text-sm font-bold uppercase tracking-[0.16em] text-teal-700">Tersimpan di perangkat</p>
         <h1 className="mt-2 text-4xl font-bold tracking-tight">Riwayat pemindaian</h1>

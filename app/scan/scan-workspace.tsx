@@ -67,7 +67,8 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
   );
   const hasResults = phase === "complete" || phase === "deleting";
   const isMobile = typeof navigator !== "undefined" && /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
-  const canDelete = !demo && !readOnly && !isMobile && rootHandle !== null;
+  const isSupportedDeleteBrowser = typeof navigator !== "undefined" && /(?:Chrome|Edg)\//.test(navigator.userAgent) && !/(?:OPR|CriOS|SamsungBrowser)\//.test(navigator.userAgent);
+  const canDelete = !demo && !readOnly && !isMobile && isSupportedDeleteBrowser && rootHandle !== null;
   const hasExportableFiles = files.some((file) => file.categories.length > 0 && !ignoredIds.has(file.id));
 
   function startWorker(source: ScanSource, folderName: string, handle: FileSystemDirectoryHandle | null) {

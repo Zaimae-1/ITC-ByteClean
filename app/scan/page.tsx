@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { SiteHeader } from "../components/site-header";
 import { ScanWorkspace } from "./scan-workspace";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { DEFAULT_SETTINGS, type ScanSettings } from "@/lib/scanner/types";
@@ -11,7 +10,6 @@ export default function ScanPage({
 }) {
   return (
     <>
-      <SiteHeader />
       <Suspense fallback={<p className="mx-auto max-w-6xl px-5 py-12 text-slate-600">Menyiapkan pemindaian...</p>}>
         <ScanPageContent searchParams={searchParams} />
       </Suspense>

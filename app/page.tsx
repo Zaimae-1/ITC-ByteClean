@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { SiteHeader } from "./components/site-header";
 
 const features = [
   { number: "01", title: "Pilih folder", description: "Anda menentukan folder yang boleh dibaca. ByteClean tidak memindai seluruh komputer tanpa izin." },
@@ -10,7 +9,6 @@ const features = [
 export default function Home() {
   return (
     <>
-      <SiteHeader />
       <main>
         <section className="border-b border-slate-200 bg-gradient-to-br from-teal-50 via-white to-sky-50">
           <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:py-28">
