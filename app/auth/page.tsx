@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { AuthForm } from "./auth-form";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
+export const instant = false;
+
 export default async function AuthPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const client = await createSupabaseServerClient();
   if (client && (await client.auth.getUser()).data.user) redirect("/account");

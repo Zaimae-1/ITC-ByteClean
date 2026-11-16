@@ -5,6 +5,8 @@ import { createOrganization, joinOrganization } from "./actions";
 import { AdminControls } from "./admin-controls";
 import { formatBytes } from "@/lib/scanner/rules";
 
+export const instant = false;
+
 type Dashboard = { memberCount: number; scanCount: number; averageScore: number | null; totalPotentialBytes: number; totalDeletedBytes: number; monthly: { month: string; scans: number; deletedBytes: number }[] };
 
 export default async function AccountPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
