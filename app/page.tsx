@@ -4,7 +4,7 @@ import { DemoPreview } from "./components/demo-preview";
 const features = [
   { number: "01", title: "Pilih folder", description: "Anda menentukan folder yang boleh dibaca. ByteClean tidak memindai seluruh komputer tanpa izin." },
   { number: "02", title: "Tinjau hasil", description: "Lihat file kembar, file besar yang lama, dan file lain yang mungkin tidak diperlukan." },
-  { number: "03", title: "Bersihkan sendiri", description: "Pilih file secara manual. Hapus di Chrome atau Edge desktop, atau ekspor daftar ke CSV." },
+  { number: "03", title: "Bersihkan sendiri", description: "Pilih file yang ingin dibersihkan. Hapus di Chrome atau Edge desktop, atau unduh daftarnya." },
 ];
 
 export default function Home() {
@@ -34,7 +34,7 @@ export default function Home() {
         </section>
         <section className="mx-auto max-w-6xl px-5 pt-16"><p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">Tiga langkah sederhana</p><h2 className="mt-2 text-3xl font-bold tracking-tight">Dari folder penuh ke keputusan yang jelas</h2><div className="mt-7 grid gap-4 md:grid-cols-3">{features.map((feature) => <div key={feature.number} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"><span className="inline-flex size-10 items-center justify-center rounded-xl bg-teal-50 font-mono font-bold text-teal-700">{feature.number}</span><h3 className="mt-5 text-lg font-bold">{feature.title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{feature.description}</p></div>)}</div></section>
         <section className="mx-auto grid max-w-6xl gap-8 px-5 py-16 md:grid-cols-3">
-          <div><h2 className="text-lg font-semibold">Privasi sejak awal</h2><p className="mt-2 text-slate-600">Analisis file berjalan di browser. Akun instansi hanya menerima angka ringkasan jika fitur sinkronisasi diaktifkan.</p></div>
+          <div><h2 className="text-lg font-semibold">Privasi sejak awal</h2><p className="mt-2 text-slate-600">File diperiksa di perangkatmu. Jika kamu memakai akun organisasi, hanya angka ringkasan yang dikirim.</p></div>
           <div><h2 className="text-lg font-semibold">Keputusan di tangan Anda</h2><p className="mt-2 text-slate-600">Tidak ada file yang tercentang otomatis. Setiap penghapusan memerlukan konfirmasi.</p></div>
           <div><h2 className="text-lg font-semibold">Dapat dipresentasikan</h2><p className="mt-2 text-slate-600">Mode demo memakai data contoh dan tidak meminta akses ke folder perangkat.</p></div>
         </section>

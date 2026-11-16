@@ -19,7 +19,7 @@ export function AdminControls({ initialInvites, settings }: {
 
   async function refreshInvites() {
     const { data, error: failure } = await createSupabaseBrowserClient().rpc("list_invites");
-    if (failure) setError(failure.message);
+    if (failure) setError("Daftar undangan belum bisa dimuat. Coba muat ulang halaman.");
     else setInvites((data ?? []) as Invite[]);
   }
 
@@ -28,7 +28,7 @@ export function AdminControls({ initialInvites, settings }: {
     const { data: newCode, error: failure } = await createSupabaseBrowserClient().rpc("create_invite", {
       p_max_uses: Number(data.get("maxUses")), p_valid_days: Number(data.get("validDays")),
     });
-    if (failure) setError(failure.message);
+    if (failure) setError("Kode belum bisa dibuat. Periksa batas pemakaian, lalu coba lagi.");
     else { setCode(String(newCode)); await refreshInvites(); }
     setBusy(false);
   }
@@ -45,7 +45,7 @@ export function AdminControls({ initialInvites, settings }: {
   async function revokeInvite(id: string) {
     setBusy(true); setError("");
     const { error: failure } = await createSupabaseBrowserClient().rpc("revoke_invite", { p_id: id });
-    if (failure) setError(failure.message);
+    if (failure) setError("Kode belum bisa dicabut. Coba lagi beberapa saat.");
     else await refreshInvites();
     setBusy(false);
   }
@@ -57,7 +57,7 @@ export function AdminControls({ initialInvites, settings }: {
       p_old_file_days: Number(data.get("oldDays")),
       p_old_installer_days: Number(data.get("installerDays")),
     });
-    if (failure) setError(failure.message);
+    if (failure) setError("Aturan belum tersimpan. Periksa angka yang diisi, lalu coba lagi.");
     else { setNotice("Pengaturan tersimpan untuk pemindaian berikutnya."); router.refresh(); }
     setBusy(false);
   }
@@ -83,7 +83,7 @@ export function AdminControls({ initialInvites, settings }: {
       <form action={saveSettings} className="mt-5 grid gap-4">
         <label className="grid gap-1 text-sm">Ukuran file besar (MB)<input name="largeMb" type="number" min="1" max="102400" defaultValue={settings.large_file_bytes / 1024 / 1024} className="rounded-lg border border-slate-300 px-3 py-2" /></label>
         <label className="grid gap-1 text-sm">Usia file lama (hari)<input name="oldDays" type="number" min="1" max="3650" defaultValue={settings.old_file_days} className="rounded-lg border border-slate-300 px-3 py-2" /></label>
-        <label className="grid gap-1 text-sm">Usia installer lama (hari)<input name="installerDays" type="number" min="1" max="3650" defaultValue={settings.old_installer_days} className="rounded-lg border border-slate-300 px-3 py-2" /></label>
+        <label className="grid gap-1 text-sm">Usia file pemasangan lama (hari)<input name="installerDays" type="number" min="1" max="3650" defaultValue={settings.old_installer_days} className="rounded-lg border border-slate-300 px-3 py-2" /></label>
         <button disabled={busy} className="rounded-lg bg-teal-700 px-4 py-2 font-semibold text-white disabled:opacity-50">Simpan pengaturan</button>
       </form>
     </section>

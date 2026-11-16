@@ -16,10 +16,10 @@ export async function authenticate(_: AuthState, data: FormData): Promise<AuthSt
     const { error } = await client.auth.signUp({ email, password, options: {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/auth/callback`,
     } });
-    return error ? { error: error.message, success: "" } : { error: "", success: "Periksa email untuk mengonfirmasi akun, lalu masuk." };
+    return error ? { error: "Akun belum bisa dibuat. Periksa email dan kata sandi, lalu coba lagi.", success: "" } : { error: "", success: "Periksa email untuk mengonfirmasi akun, lalu masuk." };
   }
   const { error } = await client.auth.signInWithPassword({ email, password });
-  if (error) return { error: error.message, success: "" };
+  if (error) return { error: "Email atau kata sandi belum cocok. Periksa lalu coba lagi.", success: "" };
   redirect("/account");
 }
 

@@ -13,7 +13,7 @@ export async function createOrganization(data: FormData) {
   const name = String(data.get("name") ?? "").trim();
   if (name.length < 2 || name.length > 100) accountError("Nama organisasi harus 2–100 karakter.");
   const { error } = await client.rpc("create_organization", { p_name: name });
-  if (error) accountError(error.message);
+  if (error) accountError("Organisasi belum bisa dibuat. Coba nama lain atau muat ulang halaman.");
   redirect("/account");
 }
 
@@ -24,6 +24,6 @@ export async function joinOrganization(data: FormData) {
   const unit = String(data.get("unit") ?? "").trim();
   if (!code || unit.length > 80) accountError("Isi kode undangan dan unit yang valid.");
   const { error } = await client.rpc("join_organization", { p_code: code, p_unit: unit });
-  if (error) accountError(error.message);
+  if (error) accountError("Kode tidak tersedia atau sudah kedaluwarsa. Minta kode baru kepada admin.");
   redirect("/account");
 }

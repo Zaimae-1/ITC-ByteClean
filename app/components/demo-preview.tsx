@@ -23,7 +23,7 @@ export function DemoPreview() {
         {CATEGORIES.map((category) => <button key={category} onClick={() => setActive(category)} aria-pressed={active === category} className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition ${active === category ? "bg-teal-400 text-slate-950" : "border border-white/15 text-slate-300 hover:border-teal-400 hover:text-white"}`}>{CATEGORY_LABELS[category]}</button>)}
       </div>
       <div className="mt-3 min-h-40 rounded-2xl border border-white/10 bg-white/5 p-4">
-        <div className="flex justify-between gap-3 text-sm"><span className="font-semibold">{CATEGORY_LABELS[active]}</span><span className="text-slate-400">{summary.categories[active].count} kandidat</span></div>
+        <div className="flex justify-between gap-3 text-sm"><span className="font-semibold">{CATEGORY_LABELS[active]}</span><span className="text-slate-400">{summary.categories[active].count} file perlu ditinjau</span></div>
         <div className="mt-3 space-y-2">{visible.length ? visible.map((file) => <div key={file.id} className="flex items-center justify-between gap-3 rounded-lg bg-white/5 px-3 py-2 text-xs"><span className="min-w-0 truncate text-slate-200">{file.name}</span><span className="shrink-0 font-semibold text-teal-200">{formatBytes(file.size)}</span></div>) : <p className="py-8 text-center text-sm text-slate-400">Tidak ada contoh pada kategori ini.</p>}</div>
       </div>
       <Link href="/scan?demo=1" className="mt-5 flex items-center justify-between rounded-xl bg-teal-400 px-4 py-3 font-semibold text-slate-950 transition hover:bg-teal-300">Buka demo lengkap <span aria-hidden="true">↗</span></Link>
