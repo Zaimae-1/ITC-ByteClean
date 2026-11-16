@@ -78,7 +78,7 @@ export function AdminControls({ initialInvites, settings }: {
       </div>
     </section>
     <section className="rounded-2xl border border-slate-200 bg-white p-6">
-      <h2 className="text-xl font-bold">Ambang pemindaian</h2>
+      <h2 className="text-xl font-bold">Aturan pindai</h2>
       <p className="mt-2 text-sm text-slate-600">Berlaku saat anggota memulai pindai berikutnya.</p>
       <form action={saveSettings} className="mt-5 grid gap-4">
         <label className="grid gap-1 text-sm">Ukuran file besar (MB)<input name="largeMb" type="number" min="1" max="102400" defaultValue={settings.large_file_bytes / 1024 / 1024} className="rounded-lg border border-slate-300 px-3 py-2" /></label>

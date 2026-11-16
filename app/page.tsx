@@ -3,7 +3,7 @@ import { DemoPreview } from "./components/demo-preview";
 
 const features = [
   { number: "01", title: "Pilih folder", description: "Anda menentukan folder yang boleh dibaca. ByteClean tidak memindai seluruh komputer tanpa izin." },
-  { number: "02", title: "Tinjau hasil", description: "Lihat duplikat, file besar dan lama, file sementara, installer lama, file kosong, dan nama salinan." },
+  { number: "02", title: "Tinjau hasil", description: "Lihat file kembar, file besar yang lama, dan file lain yang mungkin tidak diperlukan." },
   { number: "03", title: "Bersihkan sendiri", description: "Pilih file secara manual. Hapus di Chrome atau Edge desktop, atau ekspor daftar ke CSV." },
 ];
 
@@ -25,7 +25,7 @@ export default function Home() {
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/scan" className="rounded-xl bg-teal-700 px-6 py-3 font-semibold text-white hover:bg-teal-800">Mulai pindai</Link>
-                <Link href="/scan?demo=1" className="rounded-xl border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-900 hover:border-teal-600">Coba demo</Link>
+                <Link href="/scan?demo=1" className="self-center px-2 py-3 font-semibold text-teal-800 underline-offset-4 hover:underline">Coba demo tanpa pilih folder →</Link>
               </div>
               <p className="mt-6 flex items-center gap-2 text-sm text-slate-600"><span className="flex size-6 items-center justify-center rounded-full bg-teal-100 text-teal-800" aria-hidden="true">✓</span> Isi, nama, dan jalur file tidak diunggah ke server.</p>
             </div>

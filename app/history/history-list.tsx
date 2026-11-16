@@ -71,7 +71,7 @@ export function HistoryList() {
               <div><dt className="text-slate-500">Potensi</dt><dd className="mt-1 font-semibold">{formatBytes(record.summary.potentialBytes)}</dd></div>
               <div><dt className="text-slate-500">Berhasil dihapus</dt><dd className="mt-1 font-semibold">{formatBytes(record.deletedBytes)}</dd></div>
             </dl>
-            <p className="mt-4 text-xs text-slate-500">Ambang: besar ≥ {formatBytes(record.settings.largeFileBytes)}, lama ≥ {record.settings.oldFileDays} hari, installer ≥ {record.settings.oldInstallerDays} hari.</p>
+            <p className="mt-4 text-sm text-slate-500">Aturan saat dipindai: ukuran besar mulai {formatBytes(record.settings.largeFileBytes)}, file lama mulai {record.settings.oldFileDays} hari, file pemasangan lama mulai {record.settings.oldInstallerDays} hari.</p>
             <details className="mt-5 rounded-xl bg-slate-50 px-4 py-3"><summary className="cursor-pointer text-sm font-semibold text-teal-800">Lihat rincian kategori</summary><div className="mt-4 grid gap-3 sm:grid-cols-2">{CATEGORIES.map((category) => <div key={category} className="flex justify-between gap-3 border-b border-slate-200 pb-2 text-sm"><span className="text-slate-600">{CATEGORY_LABELS[category]}</span><span className="font-semibold">{record.summary.categories[category].count} · {formatBytes(record.summary.categories[category].bytes)}</span></div>)}</div><p className="mt-3 text-xs text-slate-500">Satu file dapat masuk lebih dari satu kategori.</p></details>
           </article>
         ))}

@@ -10,12 +10,12 @@ export const CATEGORIES = [
 export type Category = (typeof CATEGORIES)[number];
 
 export const CATEGORY_LABELS: Record<Category, string> = {
-  duplicate: "Duplikat",
+  duplicate: "File kembar",
   largeOld: "Besar dan lama",
   temporary: "File sementara",
-  oldInstaller: "Installer lama",
+  oldInstaller: "File pemasangan lama",
   empty: "File kosong",
-  namedCopy: "Bernama salinan",
+  namedCopy: "Nama mirip salinan",
 };
 
 export interface ScanSettings {
