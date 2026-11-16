@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSupabaseBrowserClient } from "@/lib/supabase/browser";
 
-type Invite = { id: string; expires_at: string; max_uses: number; uses: number; revoked_at: string | null; created_at: string };
+export type Invite = { id: string; expires_at: string; max_uses: number; uses: number; revoked_at: string | null; created_at: string };
 
 export function AdminControls({ initialInvites, settings }: {
   initialInvites: Invite[];
@@ -31,6 +31,15 @@ export function AdminControls({ initialInvites, settings }: {
     if (failure) setError(failure.message);
     else { setCode(String(newCode)); await refreshInvites(); }
     setBusy(false);
+  }
+
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setNotice("Kode undangan disalin.");
+    } catch {
+      setError("Tidak dapat menyalin otomatis. Pilih dan salin kode secara manual.");
+    }
   }
 
   async function revokeInvite(id: string) {
@@ -62,7 +71,7 @@ export function AdminControls({ initialInvites, settings }: {
         <label className="grid gap-1 text-sm">Berlaku (hari)<input name="validDays" type="number" min="1" max="30" defaultValue="7" className="w-36 rounded-lg border border-slate-300 px-3 py-2" /></label>
         <button disabled={busy} className="rounded-lg bg-teal-700 px-4 py-2 font-semibold text-white disabled:opacity-50">Buat kode</button>
       </form>
-      {code && <div className="mt-4 rounded-lg bg-teal-50 p-4"><p className="text-sm text-teal-900">Salin kode ini sekarang:</p><p className="mt-1 break-all font-mono text-lg font-bold text-teal-950">{code}</p></div>}
+      {code && <div className="mt-4 rounded-lg bg-teal-50 p-4"><p className="text-sm text-teal-900">Salin kode ini sekarang:</p><div className="mt-2 flex flex-wrap items-center justify-between gap-3"><p className="break-all font-mono text-lg font-bold text-teal-950">{code}</p><button type="button" onClick={copyCode} className="rounded-lg border border-teal-300 bg-white px-3 py-2 text-sm font-semibold text-teal-800 hover:bg-teal-100">Salin kode</button></div></div>}
       <div className="mt-5 space-y-2">
         {invites.length === 0 && <p className="text-sm text-slate-500">Belum ada undangan.</p>}
         {invites.map((invite) => <div key={invite.id} className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 px-3 py-2 text-sm"><span>{invite.uses}/{invite.max_uses} dipakai · {invite.revoked_at ? "Dicabut" : new Date(invite.expires_at) < new Date() ? "Kedaluwarsa" : `sampai ${new Date(invite.expires_at).toLocaleDateString("id-ID")}`}</span>{!invite.revoked_at && <button type="button" disabled={busy} onClick={() => revokeInvite(invite.id)} className="font-semibold text-red-700 disabled:opacity-50">Cabut</button>}</div>)}
