@@ -17,3 +17,27 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Keep supporting copy and control labels readable on small screens. */
+.text-xs, .text-sm {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+@keyframes scan-progress {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(300%); }
+}
+
+@keyframes score-pop {
+  0% { transform: scale(0.7); color: #2dd4bf; }
+  70% { transform: scale(1.12); }
+  100% { transform: scale(1); color: #ffffff; }
+}
+
+.scan-progress-indeterminate { animation: scan-progress 1.4s ease-in-out infinite; }
+.score-pop { animation: score-pop 650ms ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-progress-indeterminate, .score-pop { animation: none; }
+}

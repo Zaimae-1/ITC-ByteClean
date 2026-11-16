@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { potentialFileIds } from "../lib/scanner/rules";
+import { calculateSummary, duplicateKeeperIds, potentialFileIds } from "../lib/scanner/rules";
 import { groupByZone, zoneForFile } from "../lib/scanner/zones";
 import type { ScanFile } from "../lib/scanner/types";
 
@@ -30,4 +30,16 @@ test("only old temporary files enter quick cleanup", () => {
 test("protecting a file removes it from cleanup zones", () => {
   const item = file("protected", ["temporary"], now - 31 * 24 * 60 * 60 * 1000);
   assert.equal(zoneForFile(item, new Set(), now), "red");
+});
+
+test("the last verified copy stays protected after its duplicate is deleted", () => {
+  const original = { ...file("a", ["duplicate", "largeOld"]), duplicateGroup: "pair" };
+  const copy = { ...file("b", ["duplicate"]), duplicateGroup: "pair" };
+  const important = { ...file("important", []), size: 100 };
+  const keepers = duplicateKeeperIds([original, copy, important]);
+  const before = calculateSummary([original, copy, important], keepers);
+  const after = calculateSummary([original, important], keepers);
+  assert.deepEqual([...keepers], ["a"]);
+  assert.equal(zoneForFile(original, potentialFileIds([original, important], keepers), now), "red");
+  assert.ok((after.score ?? 0) > (before.score ?? 0));
 });

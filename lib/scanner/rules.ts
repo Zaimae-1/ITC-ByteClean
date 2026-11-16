@@ -69,6 +69,21 @@ export function potentialFileIds(
   return ids;
 }
 
+export function duplicateKeeperIds(files: ScanFile[]): Set<string> {
+  const groups = new Map<string, ScanFile[]>();
+  for (const file of files) {
+    if (!file.duplicateGroup) continue;
+    const group = groups.get(file.duplicateGroup) ?? [];
+    group.push(file);
+    groups.set(file.duplicateGroup, group);
+  }
+  const keepers = new Set<string>();
+  for (const group of groups.values()) {
+    if (group.length > 1) keepers.add([...group].sort((a, b) => a.path.localeCompare(b.path))[0].id);
+  }
+  return keepers;
+}
+
 export function calculateSummary(
   files: ScanFile[],
   ignoredIds: ReadonlySet<string> = new Set(),
