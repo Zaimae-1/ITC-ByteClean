@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { syncScanRecord } from "@/lib/supabase/sync";
 import { createDemoFiles } from "@/lib/scanner/demo";
 import { filesToCsv } from "@/lib/scanner/csv";
+import { deleteSelectedFiles } from "@/lib/scanner/delete";
 import {
   calculateSummary,
   formatBytes,
@@ -22,9 +23,6 @@ import type { ScanResponse, ScanSource } from "@/lib/scanner/worker-protocol";
 
 type Phase = "idle" | "collecting" | "hashing" | "complete" | "deleting";
 type Filter = Category | "all";
-type WritableDirectory = FileSystemDirectoryHandle & {
-  requestPermission(options: { mode: "readwrite" }): Promise<PermissionState>;
-};
 
 export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean; settings: ScanSettings }) {
   const [files, setFiles] = useState<ScanFile[]>(() => initialDemo ? createDemoFiles() : []);
@@ -239,36 +237,16 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
       return;
     }
     setError("");
+    setPhase("deleting");
+    let result: Awaited<ReturnType<typeof deleteSelectedFiles>>;
     try {
-      const permission = await (rootHandle as WritableDirectory).requestPermission({ mode: "readwrite" });
-      if (permission !== "granted") {
-        setError("Izin tulis tidak diberikan. Tidak ada file yang dihapus.");
-        return;
-      }
-    } catch {
-      setError("Browser tidak dapat meminta izin tulis untuk folder ini.");
+      result = await deleteSelectedFiles(rootHandle, selectedFiles);
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Browser tidak dapat meminta izin tulis untuk folder ini.");
+      setPhase("complete");
       return;
     }
-
-    setPhase("deleting");
-    const deleted = new Set<string>();
-    const failures: string[] = [];
-    let bytes = 0;
-    for (const file of selectedFiles) {
-      try {
-        if (!file.parentDirectory) throw new Error("Handle folder tidak tersedia");
-        const current = await file.parentDirectory.getFileHandle(file.name);
-        const metadata = await current.getFile();
-        if (metadata.size !== file.size || metadata.lastModified !== file.lastModified) {
-          throw new Error("File berubah sejak pemindaian");
-        }
-        await file.parentDirectory.removeEntry(file.name);
-        deleted.add(file.id);
-        bytes += file.size;
-      } catch {
-        failures.push(file.path);
-      }
-    }
+    const { deleted, failures, bytes } = result;
     setFiles((current) => current.filter((file) => !deleted.has(file.id)));
     setSelectedIds(new Set());
     setDeletedBytes((current) => current + bytes);
