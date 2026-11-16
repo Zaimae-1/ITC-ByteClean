@@ -23,6 +23,16 @@ import type { ScanResponse, ScanSource } from "@/lib/scanner/worker-protocol";
 
 type Phase = "idle" | "collecting" | "hashing" | "complete" | "deleting";
 type Filter = Category | "all";
+type Sort = "largest" | "smallest" | "oldest" | "name";
+
+const CATEGORY_COLORS: Record<Category, string> = {
+  duplicate: "bg-indigo-500",
+  largeOld: "bg-orange-500",
+  temporary: "bg-sky-500",
+  oldInstaller: "bg-violet-500",
+  empty: "bg-slate-500",
+  namedCopy: "bg-teal-500",
+};
 
 export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean; settings: ScanSettings }) {
   const [files, setFiles] = useState<ScanFile[]>(() => initialDemo ? createDemoFiles() : []);
@@ -37,6 +47,8 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [ignoredIds, setIgnoredIds] = useState<Set<string>>(new Set());
   const [filter, setFilter] = useState<Filter>("all");
+  const [sort, setSort] = useState<Sort>("largest");
+  const [showIgnored, setShowIgnored] = useState(false);
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -58,10 +70,16 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
   const visibleFiles = useMemo(
     () => files.filter((file) =>
       file.categories.length > 0 &&
+      (showIgnored || !ignoredIds.has(file.id)) &&
       (filter === "all" || file.categories.includes(filter)) &&
       (search === "" || file.path.toLocaleLowerCase("id-ID").includes(search.toLocaleLowerCase("id-ID"))),
-    ),
-    [files, filter, search],
+    ).sort((a, b) => {
+      if (sort === "largest") return b.size - a.size || a.path.localeCompare(b.path);
+      if (sort === "smallest") return a.size - b.size || a.path.localeCompare(b.path);
+      if (sort === "oldest") return a.lastModified - b.lastModified || a.path.localeCompare(b.path);
+      return a.path.localeCompare(b.path, "id-ID");
+    }),
+    [files, filter, search, showIgnored, ignoredIds, sort],
   );
   const hasResults = phase === "complete" || phase === "deleting";
   const isMobile = typeof navigator !== "undefined" && /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent);
@@ -74,6 +92,9 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
     setFiles([]);
     setSelectedIds(new Set());
     setIgnoredIds(new Set());
+    setFilter("all");
+    setSearch("");
+    setShowIgnored(false);
     setDemo(false);
     setSourceName(folderName);
     setRootHandle(handle);
@@ -185,6 +206,9 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
     setSourceName("Data contoh");
     setSelectedIds(new Set());
     setIgnoredIds(new Set());
+    setFilter("all");
+    setSearch("");
+    setShowIgnored(false);
     setDeletedBytes(0);
     setDeletedCount(0);
     scanRecordPromiseRef.current = null;
@@ -213,6 +237,13 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
     const selection = new Set(selectedIds);
     selection.delete(id);
     setSelectedIds(selection);
+  }
+
+  function exploreCategory(category: Category) {
+    setFilter(category);
+    document.getElementById("scan-results")?.scrollIntoView({
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
   }
 
   function exportCsv() {
@@ -312,15 +343,35 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
             <p className="text-sm text-slate-600">Folder: <strong className="text-slate-900">{sourceName}</strong>{skippedCount ? ` · ${skippedCount} file tidak dapat dibaca` : ""}</p>
             <Link href="/score" className="text-sm font-semibold text-teal-700 hover:underline">Bagaimana skor dihitung?</Link>
           </div>
-          <section aria-label="Ringkasan pemindaian" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <SummaryCard label="File diperiksa" value={summary.totalFiles.toLocaleString("id-ID")} />
-            <SummaryCard label="Ukuran terpindai" value={formatBytes(summary.totalBytes)} />
-            <SummaryCard label="Potensi ruang" value={formatBytes(summary.potentialBytes)} />
-            <SummaryCard label="Skor kebersihan" value={summary.score === null ? "—" : `${summary.score}/100`} />
+          <section aria-label="Ringkasan pemindaian" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.35fr]">
+            <SummaryCard label="File diperiksa" value={summary.totalFiles.toLocaleString("id-ID")} detail="Dalam folder pilihan" />
+            <SummaryCard label="Ukuran terpindai" value={formatBytes(summary.totalBytes)} detail="Dianalisis di perangkat" />
+            <SummaryCard label="Potensi ruang" value={formatBytes(summary.potentialBytes)} detail={`${summary.potentialFiles.toLocaleString("id-ID")} kandidat untuk ditinjau`} />
+            <div className="flex items-center gap-4 rounded-2xl bg-slate-950 p-5 text-white shadow-lg shadow-slate-950/10">
+              <div className="flex size-20 shrink-0 items-center justify-center rounded-full p-2" style={{ background: `conic-gradient(#2dd4bf ${(summary.score ?? 0) * 3.6}deg, #334155 0)` }}>
+                <div className="flex size-full items-center justify-center rounded-full bg-slate-950 text-xl font-bold">{summary.score ?? "—"}</div>
+              </div>
+              <div><p className="text-sm text-slate-300">Skor kebersihan</p><p className="mt-1 font-semibold">{summary.score === null ? "Belum tersedia" : `${summary.score} dari 100`}</p><p className="mt-1 text-xs text-slate-400">Berdasarkan ruang kandidat</p></div>
+            </div>
           </section>
           {deletedBytes > 0 && <p className="mt-4 text-sm font-semibold text-teal-800">Berhasil dibebaskan dalam sesi ini: {formatBytes(deletedBytes)}</p>}
 
-          <section className="mt-10">
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7" aria-label="Jelajahi kategori">
+            <div className="flex flex-wrap items-end justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">Peta temuan</p><h2 className="mt-1 text-xl font-bold">Jelajahi menurut kategori</h2></div><p className="text-xs text-slate-500">Satu file dapat muncul di beberapa kategori</p></div>
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {CATEGORIES.map((category) => {
+                const item = summary.categories[category];
+                const max = Math.max(...CATEGORIES.map((key) => summary.categories[key].bytes), 1);
+                return <button key={category} onClick={() => exploreCategory(category)} className="group rounded-xl border border-slate-200 p-4 text-left transition hover:-translate-y-0.5 hover:border-teal-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-teal-600" aria-label={`Lihat ${CATEGORY_LABELS[category]}, ${item.count} file`}>
+                  <div className="flex items-center justify-between gap-2"><span className="font-semibold text-slate-900">{CATEGORY_LABELS[category]}</span><span className="text-sm font-bold text-slate-600 group-hover:text-teal-700">{item.count} file ↗</span></div>
+                  <p className="mt-2 text-sm text-slate-500">{formatBytes(item.bytes)}</p>
+                  <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100"><div className={`h-full rounded-full ${CATEGORY_COLORS[category]} transition-all duration-300`} style={{ width: `${item.bytes === 0 ? 0 : Math.max(5, item.bytes / max * 100)}%` }} /></div>
+                </button>;
+              })}
+            </div>
+          </section>
+
+          <section id="scan-results" className="mt-10 scroll-mt-6">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <h2 className="text-2xl font-bold">Hasil dan tinjauan</h2>
@@ -339,10 +390,12 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
                 </FilterButton>
               ))}
             </div>
-            <label className="mt-5 block max-w-lg">
-              <span className="sr-only">Cari file dalam hasil</span>
-              <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Cari nama atau jalur file" className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-teal-600" />
-            </label>
+            <div className="mt-5 flex flex-wrap items-end gap-4 rounded-2xl bg-slate-50 p-4">
+              <label className="min-w-52 flex-1"><span className="mb-1 block text-xs font-semibold text-slate-600">Cari dalam hasil</span><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nama atau jalur file" className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-teal-600" /></label>
+              <label className="min-w-44"><span className="mb-1 block text-xs font-semibold text-slate-600">Urutkan</span><select value={sort} onChange={(event) => setSort(event.target.value as Sort)} className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-teal-600"><option value="largest">Terbesar dulu</option><option value="smallest">Terkecil dulu</option><option value="oldest">Terlama dulu</option><option value="name">Nama A–Z</option></select></label>
+              <label className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700"><input type="checkbox" checked={showIgnored} onChange={(event) => setShowIgnored(event.target.checked)} className="size-4 accent-teal-700" /> Tampilkan yang diabaikan</label>
+              {(search || filter !== "all") && <button onClick={() => { setSearch(""); setFilter("all"); }} className="px-2 py-3 text-sm font-semibold text-teal-700 hover:underline">Reset filter</button>}
+            </div>
             <p className="mt-3 text-sm text-slate-500">{visibleFiles.length.toLocaleString("id-ID")} file dalam tampilan{visibleFiles.length > 200 ? " · tampil 200 pertama, gunakan pencarian untuk mempersempit" : ""}.</p>
             <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 bg-white">
               {visibleFiles.length === 0 && <p className="px-5 py-9 text-center text-slate-500">Tidak ada file pada kategori ini.</p>}
@@ -388,8 +441,8 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
   );
 }
 
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p className="text-sm text-slate-500">{label}</p><p className="mt-2 text-2xl font-bold text-slate-950">{value}</p></div>;
+function SummaryCard({ label, value, detail }: { label: string; value: string; detail: string }) {
+  return <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p className="text-sm text-slate-500">{label}</p><p className="mt-2 text-2xl font-bold text-slate-950">{value}</p><p className="mt-2 text-xs text-slate-500">{detail}</p></div>;
 }
 
 function FilterButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
