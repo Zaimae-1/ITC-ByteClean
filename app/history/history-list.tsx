@@ -12,7 +12,7 @@ export function HistoryList() {
   const records = useLiveQuery(() => db.scans.orderBy("createdAt").reverse().toArray(), []);
   const [period, setPeriod] = useState<"all" | "30d">("all");
   const [sort, setSort] = useState<"recent" | "oldest" | "potential">("recent");
-  const [cutoff] = useState(() => Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const [cutoff, setCutoff] = useState(0);
   useEffect(() => { syncPendingScans().catch(() => {}); }, []);
   const displayed = useMemo(() => {
     return (records ?? []).filter((record) => period === "all" || record.createdAt >= cutoff).sort((a, b) => {
@@ -54,7 +54,7 @@ export function HistoryList() {
         <button onClick={clearHistory} className="text-sm font-semibold text-red-700 hover:underline">Hapus riwayat lokal</button>
       </div>
       <div className="mb-5 flex flex-wrap items-center gap-3 rounded-2xl bg-slate-50 p-4">
-        <label className="grid gap-1 text-xs font-semibold text-slate-600">Periode<select value={period} onChange={(event) => setPeriod(event.target.value as "all" | "30d")} className="min-w-36 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-normal text-slate-900"><option value="all">Semua waktu</option><option value="30d">30 hari terakhir</option></select></label>
+        <label className="grid gap-1 text-xs font-semibold text-slate-600">Periode<select value={period} onChange={(event) => { const next = event.target.value as "all" | "30d"; if (next === "30d") setCutoff(Date.now() - 30 * 24 * 60 * 60 * 1000); setPeriod(next); }} className="min-w-36 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-normal text-slate-900"><option value="all">Semua waktu</option><option value="30d">30 hari terakhir</option></select></label>
         <label className="grid gap-1 text-xs font-semibold text-slate-600">Urutan<select value={sort} onChange={(event) => setSort(event.target.value as "recent" | "oldest" | "potential")} className="min-w-44 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-normal text-slate-900"><option value="recent">Terbaru dulu</option><option value="oldest">Terlama dulu</option><option value="potential">Potensi terbesar</option></select></label>
       </div>
       <div className="grid gap-4">
