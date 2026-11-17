@@ -537,7 +537,7 @@ function ZoneCard({ zone, count, bytes, active, onExplore, onBulk, demo }: {
     red: "border-[#e8dada] bg-[#faf3f2] text-[#624744]",
   };
   const dot = { green: "bg-[#4a8061]", yellow: "bg-[#a5823f]", red: "bg-[#a66b65]" };
-  const action = { green: "Bisa ditinjau bersama", yellow: "Periksa satu per satu", red: "Dilindungi" };
+  const action = { green: "Bisa ditinjau bersama", yellow: "Periksa satu per satu", red: "Tidak bisa dihapus" };
   const description = {
     green: "Salinan kembar tambahan dan file sementara lama. Tetap periksa jika ragu.",
     yellow: "Mungkin masih dipakai. Pilih file satu per satu sebelum menghapus.",
