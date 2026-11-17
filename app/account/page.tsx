@@ -37,11 +37,11 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
   const dashboard = dashboardResult.data as Dashboard | null;
 
   return <main className="mx-auto max-w-6xl px-5 py-14">
-    <div className="rounded-[2rem] bg-slate-950 px-6 py-8 text-white sm:px-9">
-      <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-300">{isAdmin ? "Dasbor admin" : "Ruang organisasi"}</p>
+    <div className="rounded-3xl border border-[#d5e2da] bg-[#eef5ef] px-6 py-8 text-[#243331] sm:px-9">
+      <p className="text-sm font-semibold text-[#285e53]">{isAdmin ? "Dasbor admin" : "Ruang organisasi"}</p>
       <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{org.name}</h1>
-      <p className="mt-3 text-sm text-slate-300">{user.email} · {isAdmin ? "Admin" : membership.unit || "Anggota"}</p>
-      <div className="mt-6 flex flex-wrap gap-3"><Link href="/scan" className="rounded-lg bg-teal-400 px-4 py-2 font-semibold text-slate-950 hover:bg-teal-300">Mulai pindai</Link><Link href="/history" className="rounded-lg border border-white/25 px-4 py-2 font-semibold text-white hover:border-white">Lihat riwayat</Link></div>
+      <p className="mt-3 text-sm text-[#526a63]">{user.email} · {isAdmin ? "Admin" : membership.unit || "Anggota"}</p>
+      <div className="mt-6 flex flex-wrap gap-3"><Link href="/scan" className="inline-flex min-h-11 items-center rounded-lg bg-[#2e7066] px-4 py-2 font-semibold text-white hover:bg-[#24594f]">Mulai pindai</Link><Link href="/history" className="inline-flex min-h-11 items-center rounded-lg border border-[#b9d0c1] px-4 py-2 font-semibold text-[#285e53] hover:bg-white">Lihat riwayat</Link></div>
     </div>
 
     {isAdmin && <>

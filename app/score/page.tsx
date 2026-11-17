@@ -4,12 +4,12 @@ export default function ScorePage() {
   return (
     <>
       <main className="mx-auto max-w-3xl px-5 py-12 sm:py-16">
-        <p className="text-sm font-bold uppercase tracking-[0.16em] text-teal-700">Metode terbuka</p>
-        <h1 className="mt-2 text-4xl font-bold tracking-tight">Tentang Skor Kebersihan Digital</h1>
+        <p className="text-sm font-semibold text-[#285e53]">Metode terbuka</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">Tentang Skor Kebersihan Digital</h1>
         <p className="mt-5 text-lg leading-8 text-slate-600">Skor membantu memperkirakan porsi ruang yang mungkin dapat dibersihkan pada folder yang Anda pilih. Skor bukan penilaian keamanan atau kualitas file.</p>
-        <section className="mt-9 rounded-2xl border border-teal-200 bg-teal-50 p-6">
+        <section className="mt-9 rounded-2xl border border-[#d5e2da] bg-[#eef5ef] p-6">
           <h2 className="font-semibold text-teal-950">Rumus versi 1</h2>
-          <p className="mt-2 text-xl font-bold text-teal-950">100 × (1 − ukuran file yang perlu ditinjau ÷ ukuran semua file)</p>
+          <p className="mt-2 break-words text-lg font-bold text-[#243331] sm:text-xl">100 × (1 − ukuran file yang perlu ditinjau ÷ ukuran semua file)</p>
           <p className="mt-3 leading-7 text-teal-900">Semakin sedikit ruang yang mungkin bisa dibersihkan, semakin tinggi skornya. File kembar selalu menyisakan setidaknya satu salinan. Satu file yang masuk beberapa kategori hanya dihitung sekali.</p>
         </section>
         <div className="mt-10 space-y-8">

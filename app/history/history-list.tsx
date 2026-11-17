@@ -45,22 +45,22 @@ export function HistoryList() {
   return (
     <section className="mt-9">
       <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-2xl bg-slate-950 p-5 text-white"><p className="text-sm text-slate-300">Potensi dari riwayat</p><p className="mt-2 text-2xl font-bold">{formatBytes(totalPotential)}</p></div>
-        <div className="rounded-2xl border border-teal-200 bg-teal-50 p-5"><p className="text-sm text-teal-800">Berhasil dibebaskan</p><p className="mt-2 text-2xl font-bold text-teal-950">{formatBytes(totalDeleted)}</p></div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-5"><p className="text-sm text-slate-500">Rata-rata skor</p><p className="mt-2 text-2xl font-bold">{averageScore === null ? "—" : `${averageScore}/100`}</p></div>
+        <div className="rounded-2xl border border-[#dce7e1] bg-white p-5"><p className="text-sm text-[#526a63]">Potensi dari riwayat</p><p className="mt-2 text-2xl font-bold text-[#243331]">{formatBytes(totalPotential)}</p></div>
+        <div className="rounded-2xl border border-[#d5e2da] bg-[#eef5ef] p-5"><p className="text-sm text-[#425b55]">Berhasil dibebaskan</p><p className="mt-2 text-2xl font-bold text-[#285e53]">{formatBytes(totalDeleted)}</p></div>
+        <div className="rounded-2xl border border-[#dce7e1] bg-white p-5"><p className="text-sm text-[#526a63]">Rata-rata skor</p><p className="mt-2 text-2xl font-bold text-[#243331]">{averageScore === null ? "—" : `${averageScore}/100`}</p></div>
       </div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <p className="mt-6 text-sm text-slate-600">{displayed.length} dari {records.length} ringkasan ditampilkan.</p>
         <button onClick={clearHistory} className="text-sm font-semibold text-red-700 hover:underline">Hapus riwayat lokal</button>
       </div>
-      <div className="mb-5 flex flex-wrap items-center gap-3 rounded-2xl bg-slate-50 p-4">
+      <div className="mb-5 flex flex-wrap items-center gap-3 rounded-2xl border border-[#dce7e1] bg-[#f2f6f2] p-4">
         <label className="grid gap-1 text-xs font-semibold text-slate-600">Periode<select value={period} onChange={(event) => { const next = event.target.value as "all" | "30d"; if (next === "30d") setCutoff(Date.now() - 30 * 24 * 60 * 60 * 1000); setPeriod(next); }} className="min-w-36 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-normal text-slate-900"><option value="all">Semua waktu</option><option value="30d">30 hari terakhir</option></select></label>
         <label className="grid gap-1 text-xs font-semibold text-slate-600">Urutan<select value={sort} onChange={(event) => setSort(event.target.value as "recent" | "oldest" | "potential")} className="min-w-44 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-normal text-slate-900"><option value="recent">Terbaru dulu</option><option value="oldest">Terlama dulu</option><option value="potential">Potensi terbesar</option></select></label>
       </div>
       <div className="grid gap-4">
         {displayed.length === 0 && <p className="rounded-2xl border border-slate-200 bg-white p-7 text-slate-600">Tidak ada pemindaian dalam periode ini.</p>}
         {displayed.map((record) => (
-          <article key={record.id} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+          <article key={record.id} className="rounded-2xl border border-[#dce7e1] bg-white p-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <h2 className="font-semibold text-slate-950">{new Date(record.createdAt).toLocaleString("id-ID", { dateStyle: "long", timeStyle: "short" })}</h2>
               <div className="flex flex-wrap gap-2"><span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{record.remoteId ? "Tersimpan di akun" : "Di perangkat ini"}</span><span className="rounded-full bg-teal-50 px-3 py-1 text-sm font-bold text-teal-800">Skor {record.summary.score ?? "—"}/100</span></div>
