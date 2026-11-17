@@ -373,13 +373,13 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
     <main className="mx-auto max-w-6xl px-5 py-10 sm:py-14">
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
-          <p className="text-sm font-bold uppercase tracking-[0.16em] text-teal-700">Pemindaian lokal</p>
-          <h1 className="mt-2 text-4xl font-bold tracking-tight text-slate-950">Pindai folder Anda</h1>
-          <p className="mt-3 max-w-2xl text-slate-600">File diperiksa di perangkatmu. Nama dan isi file tidak dikirim ke server.</p>
+          <p className="text-sm font-semibold text-[#285e53]">Pemindaian lokal</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#243331] sm:text-4xl">Pindai folder Anda</h1>
+          <p className="mt-3 max-w-2xl text-[#425b55]">File diperiksa di perangkatmu. Nama dan isi file tidak dikirim ke server.</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <input ref={inputRef} type="file" multiple onChange={chooseFallback} className="sr-only" aria-label="Pilih folder" />
-          <button onClick={pickFolder} disabled={phase === "collecting" || phase === "hashing" || phase === "deleting"} className="rounded-xl bg-teal-700 px-5 py-3 font-semibold text-white hover:bg-teal-800 disabled:opacity-50">
+          <button onClick={pickFolder} disabled={phase === "collecting" || phase === "hashing" || phase === "deleting"} className="rounded-xl bg-[#2e7066] px-5 py-3 font-semibold text-white hover:bg-[#24594f] disabled:opacity-50">
             {hasResults ? "Pilih folder lain" : "Pilih folder"}
           </button>
           <button onClick={loadDemo} disabled={phase === "deleting"} className="px-2 py-3 font-semibold text-teal-700 underline-offset-4 hover:underline disabled:opacity-50">{demo ? "Ulangi demo" : "Coba demo"}</button>
@@ -414,23 +414,23 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
             <SummaryCard label="File diperiksa" value={summary.totalFiles.toLocaleString("id-ID")} detail="Dalam folder pilihan" />
             <SummaryCard label="Ukuran terpindai" value={formatBytes(summary.totalBytes)} detail="Dianalisis di perangkat" />
             <SummaryCard label="Potensi ruang" value={formatBytes(summary.potentialBytes)} detail={`${summary.potentialFiles.toLocaleString("id-ID")} file perlu ditinjau`} />
-            <div className="flex items-center gap-4 rounded-2xl bg-slate-950 p-5 text-white shadow-lg shadow-slate-950/10">
-              <div className="flex size-20 shrink-0 items-center justify-center rounded-full p-2" style={{ background: `conic-gradient(#2dd4bf ${(summary.score ?? 0) * 3.6}deg, #334155 0)` }}>
-                <div key={summary.score ?? "none"} className="score-pop flex size-full items-center justify-center rounded-full bg-slate-950 text-xl font-bold">{summary.score ?? "—"}</div>
+            <div className="flex items-center gap-4 rounded-2xl border border-[#d5e2da] bg-[#eef5ef] p-5 text-[#243331]">
+              <div className="flex size-20 shrink-0 items-center justify-center rounded-full p-2" style={{ background: `conic-gradient(#438577 ${(summary.score ?? 0) * 3.6}deg, #d8e5db 0)` }}>
+                <div key={summary.score ?? "none"} className="score-pop flex size-full items-center justify-center rounded-full bg-[#eef5ef] text-xl font-bold">{summary.score ?? "—"}</div>
               </div>
-              <div><p className="text-sm text-slate-300">Skor kebersihan</p><p className="mt-1 font-semibold">{summary.score === null ? "Belum tersedia" : `${summary.score} dari 100`}</p><p className="mt-1 text-xs text-slate-400">Berdasarkan ruang yang perlu ditinjau</p></div>
+              <div><p className="text-sm text-[#425b55]">Skor kebersihan</p><p className="mt-1 font-semibold">{summary.score === null ? "Belum tersedia" : `${summary.score} dari 100`}</p><p className="mt-1 text-xs text-[#526a63]">Berdasarkan ruang yang perlu ditinjau</p></div>
             </div>
           </section>
           {deletedBytes > 0 && <p className="mt-4 text-sm font-semibold text-teal-800">Berhasil dibebaskan dalam sesi ini: {formatBytes(deletedBytes)}</p>}
 
           <section className="mt-8" aria-label="Tiga zona file">
-            <div><p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">Langkah berikutnya</p><h2 className="mt-1 text-2xl font-bold">Pilih zona yang ingin ditangani</h2><p className="mt-2 text-slate-600">Warna menunjukkan tindakan di ByteClean, bukan jaminan bahwa suatu file tidak penting.</p></div>
+            <div><p className="text-sm font-semibold text-[#285e53]">Langkah berikutnya</p><h2 className="mt-1 text-2xl font-bold">Pilih zona yang ingin ditangani</h2><p className="mt-2 text-[#425b55]">Baca petunjuk di setiap zona sebelum memilih file. Warna membantu membedakan tindakan.</p></div>
             <div className="mt-5 grid gap-4 lg:grid-cols-3">
               <ZoneCard zone="green" count={zones.green.length} bytes={zones.green.reduce((total, file) => total + file.size, 0)} active={zoneFilter === "green"} onExplore={() => exploreZone("green")} onBulk={canSelect ? reviewGreenZone : undefined} demo={demo} />
               <ZoneCard zone="yellow" count={zones.yellow.length} bytes={zones.yellow.reduce((total, file) => total + file.size, 0)} active={zoneFilter === "yellow"} onExplore={() => exploreZone("yellow")} />
               <ZoneCard zone="red" count={zones.red.length} bytes={zones.red.reduce((total, file) => total + file.size, 0)} active={zoneFilter === "red"} onExplore={() => exploreZone("red")} />
             </div>
-            <p className="mt-3 text-sm text-slate-500">● Hijau: pilihan untuk bersih-bersih cepat &nbsp; ● Kuning: periksa satu per satu &nbsp; ● Merah: tidak bisa dihapus lewat ByteClean</p>
+            <p className="mt-3 text-sm text-[#526a63]">Hijau: dapat ditinjau bersama · Kuning: periksa satu per satu · Merah: dilindungi</p>
           </section>
 
           <details className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
@@ -440,7 +440,7 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
               {CATEGORIES.map((category) => {
                 const item = summary.categories[category];
                 const max = Math.max(...CATEGORIES.map((key) => summary.categories[key].bytes), 1);
-                return <button key={category} onClick={() => exploreCategory(category)} className="group rounded-xl border border-slate-200 p-4 text-left transition hover:-translate-y-0.5 hover:border-teal-400 hover:shadow-md focus-visible:outline-2 focus-visible:outline-teal-600" aria-label={`Lihat ${CATEGORY_LABELS[category]}, ${item.count} file`}>
+                return <button key={category} onClick={() => exploreCategory(category)} className="group rounded-xl border border-[#dce7e1] p-4 text-left transition hover:border-[#438577] hover:bg-[#f8faf8]" aria-label={`Lihat ${CATEGORY_LABELS[category]}, ${item.count} file`}>
                   <div className="flex items-center justify-between gap-2"><span className="font-semibold text-slate-900">{CATEGORY_LABELS[category]}</span><span className="text-sm font-bold text-slate-600 group-hover:text-teal-700">{item.count} file ↗</span></div>
                   <p className="mt-2 text-sm text-slate-500">{formatBytes(item.bytes)}</p>
                   <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100"><div className={`h-full rounded-full ${CATEGORY_COLORS[category]} transition-all duration-300`} style={{ width: `${item.bytes === 0 ? 0 : Math.max(5, item.bytes / max * 100)}%` }} /></div>
@@ -475,7 +475,7 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
                 return (
                   <div key={file.id} className="flex flex-col gap-3 border-b border-slate-100 px-5 py-4 last:border-0 sm:flex-row sm:items-center">
                     <label className="flex min-w-0 flex-1 items-start gap-3">
-                      <input type="checkbox" checked={selectedIds.has(file.id)} disabled={zone === "red" || !canSelect} onChange={() => toggleSelection(file.id)} className="mt-1 size-4 accent-teal-700 disabled:opacity-50" aria-label={`Pilih ${file.path}`} />
+                      <input type="checkbox" checked={selectedIds.has(file.id)} disabled={zone === "red" || !canSelect} onChange={() => toggleSelection(file.id)} className="mt-1 size-5 shrink-0 accent-[#2e7066] disabled:opacity-50" aria-label={`Pilih ${file.path}`} />
                       <span className="min-w-0">
                         <span className="block break-all font-medium text-slate-900">{file.name}</span>
                         <span className="block break-all text-xs text-slate-500">{file.path}</span>
@@ -491,7 +491,7 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
                 );
               })}
             </div>
-            {selectedIds.size > 0 && <div className="sticky bottom-4 z-30 mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-slate-950 px-5 py-4 text-white shadow-2xl shadow-slate-950/30" role="status"><div><p className="text-sm text-slate-300">{selectedIds.size} file dipilih</p><p className="text-xl font-bold">Ruang dari pilihan: {formatBytes(selectedBytes)}</p></div><div className="flex flex-wrap items-center gap-3"><button onClick={() => setSelectedIds(new Set())} className="font-semibold text-slate-300 hover:text-white">Batal pilih</button><button onClick={demo ? deleteSelected : () => setShowConfirm(true)} disabled={phase === "deleting"} className="rounded-xl bg-teal-400 px-4 py-3 font-bold text-slate-950 hover:bg-teal-300 disabled:opacity-50">{demo ? "Simulasikan bersih-bersih" : "Hapus yang dicentang"}</button></div></div>}
+            {selectedIds.size > 0 && <div className="sticky bottom-4 z-30 mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#bfd7ca] bg-[#eaf3ec] px-5 py-4 text-[#243331] shadow-lg shadow-[#779487]/15" role="status"><div><p className="text-sm text-[#425b55]">{selectedIds.size} file dipilih</p><p className="text-lg font-bold sm:text-xl">Ruang dari pilihan: {formatBytes(selectedBytes)}</p></div><div className="flex flex-wrap items-center gap-3"><button onClick={() => setSelectedIds(new Set())} className="px-2 font-semibold text-[#285e53] hover:underline">Batal pilih</button><button onClick={demo ? deleteSelected : () => setShowConfirm(true)} disabled={phase === "deleting"} className="rounded-xl bg-[#2e7066] px-4 py-3 font-bold text-white hover:bg-[#24594f] disabled:opacity-50">{demo ? "Simulasikan bersih-bersih" : "Hapus yang dicentang"}</button></div></div>}
           </section>
         </>
       )}
@@ -515,11 +515,11 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
 }
 
 function SummaryCard({ label, value, detail }: { label: string; value: string; detail: string }) {
-  return <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p className="text-sm text-slate-500">{label}</p><p className="mt-2 text-2xl font-bold text-slate-950">{value}</p><p className="mt-2 text-xs text-slate-500">{detail}</p></div>;
+  return <div className="rounded-2xl border border-[#dce7e1] bg-white p-5"><p className="text-sm text-[#526a63]">{label}</p><p className="mt-2 text-2xl font-bold text-[#243331]">{value}</p><p className="mt-2 text-xs text-[#526a63]">{detail}</p></div>;
 }
 
 function FilterButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return <button onClick={onClick} aria-pressed={active} className={`rounded-full border px-3 py-1.5 text-sm font-medium ${active ? "border-teal-700 bg-teal-700 text-white" : "border-slate-300 bg-white text-slate-700 hover:border-teal-600"}`}>{children}</button>;
+  return <button onClick={onClick} aria-pressed={active} className={`rounded-full border px-4 py-2 text-sm font-semibold ${active ? "border-[#2e7066] bg-[#2e7066] text-white" : "border-[#cbd9d0] bg-white text-[#425b55] hover:border-[#438577] hover:bg-[#f0f5ef]"}`}>{children}</button>;
 }
 
 function ZoneCard({ zone, count, bytes, active, onExplore, onBulk, demo }: {
@@ -532,20 +532,22 @@ function ZoneCard({ zone, count, bytes, active, onExplore, onBulk, demo }: {
   demo?: boolean;
 }) {
   const colors = {
-    green: "border-emerald-300 bg-emerald-50 text-emerald-950",
-    yellow: "border-amber-300 bg-amber-50 text-amber-950",
-    red: "border-red-300 bg-red-50 text-red-950",
+    green: "border-[#d5e7d9] bg-[#f0f7f0] text-[#244b35]",
+    yellow: "border-[#e8dfc9] bg-[#faf7ed] text-[#594d30]",
+    red: "border-[#e8dada] bg-[#faf3f2] text-[#624744]",
   };
-  const dot = { green: "bg-emerald-600", yellow: "bg-amber-600", red: "bg-red-600" };
+  const dot = { green: "bg-[#4a8061]", yellow: "bg-[#a5823f]", red: "bg-[#a66b65]" };
+  const action = { green: "Bisa ditinjau bersama", yellow: "Periksa satu per satu", red: "Dilindungi" };
   const description = {
     green: "Salinan kembar tambahan dan file sementara lama. Tetap periksa jika ragu.",
     yellow: "Mungkin masih dipakai. Pilih file satu per satu sebelum menghapus.",
     red: "File tanpa temuan atau yang kamu lindungi pada sesi ini. Tidak bisa dihapus di sini.",
   };
-  return <div className={`rounded-2xl border-2 p-5 ${colors[zone]} ${active ? "ring-2 ring-offset-2 ring-slate-700" : ""}`}>
+  return <div className={`rounded-2xl border p-5 ${colors[zone]} ${active ? "ring-2 ring-[#438577] ring-offset-2" : ""}`}>
     <div className="flex items-center gap-2"><span className={`size-3 rounded-full ${dot[zone]}`} /><h3 className="text-xl font-bold">{ZONE_LABELS[zone]}</h3></div>
-    <p className="mt-3 text-2xl font-bold">{count.toLocaleString("id-ID")} file <span className="text-base font-medium">· {formatBytes(bytes)}</span></p>
+    <p className="mt-2 text-sm font-bold">{action[zone]}</p>
+    <p className="mt-4 text-2xl font-bold">{count.toLocaleString("id-ID")} file <span className="text-base font-medium">· {formatBytes(bytes)}</span></p>
     <p className="mt-3 min-h-16 leading-6">{description[zone]}</p>
-    <div className="mt-4 flex flex-wrap items-center gap-3"><button onClick={onExplore} className="rounded-lg border border-current px-3 py-2 font-semibold hover:bg-white/60">Lihat file</button>{zone === "green" && onBulk && count > 0 && <button onClick={onBulk} className="rounded-lg bg-emerald-700 px-3 py-2 font-semibold text-white hover:bg-emerald-800">{demo ? "Simulasi bersihkan semua" : "Bersihkan semua"}</button>}</div>
+    <div className="mt-4 flex flex-wrap items-center gap-3"><button onClick={onExplore} className="rounded-lg border border-current px-4 py-2 font-semibold hover:bg-white/60">Lihat file</button>{zone === "green" && onBulk && count > 0 && <button onClick={onBulk} className="rounded-lg bg-[#2e7066] px-4 py-2 font-semibold text-white hover:bg-[#24594f]">{demo ? "Simulasi bersihkan semua" : "Bersihkan semua"}</button>}</div>
   </div>;
 }
