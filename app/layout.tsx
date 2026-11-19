@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "ITC ByteClean",
-  description: "Pindai dan tinjau potensi sampah digital secara lokal di browser.",
+  description: "Tinjau dan bersihkan file lokal yang tidak diperlukan dengan kendali penuh di tangan Anda.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

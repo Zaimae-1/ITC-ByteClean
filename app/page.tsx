@@ -14,12 +14,12 @@ export default function Home() {
         <section className="border-b border-[#dce7e1] bg-[#f0f5ef]">
           <div className="mx-auto grid max-w-6xl gap-12 px-5 py-14 lg:grid-cols-[1fr_0.95fr] lg:items-center lg:py-20">
             <div>
-              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#cbded2] bg-white px-4 py-2 text-sm font-semibold text-[#285e53]"><span className="size-2 rounded-full bg-[#438577]" /> Pembersihan file dengan kendali Anda</p>
+              <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#cbded2] bg-white px-4 py-2 text-sm font-semibold text-[#285e53]"><span className="size-2 rounded-full bg-[#438577]" /> Bersih-bersih file lokal dengan kendali Anda</p>
               <h1 className="max-w-3xl text-4xl font-bold leading-[1.15] tracking-tight text-[#243331] sm:text-5xl">
                 Folder lebih rapi. <span className="text-[#2b6d62]">Anda tetap memutuskan</span> apa yang dibersihkan.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-[#425b55]">
-                Pindai folder pilihan Anda, lihat potensi ruang yang bisa dibebaskan, lalu tentukan sendiri file yang ingin dibersihkan.
+                Pindai folder di perangkat Anda, temukan file yang mungkin tidak diperlukan, lalu tentukan sendiri apa yang ingin dibersihkan.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/scan" className="inline-flex min-h-12 items-center rounded-xl bg-[#2e7066] px-6 py-3 font-semibold text-white hover:bg-[#24594f]">Mulai pindai</Link>
@@ -31,10 +31,16 @@ export default function Home() {
           </div>
         </section>
         <section className="mx-auto max-w-6xl px-5 pt-16"><p className="text-sm font-semibold text-[#285e53]">Tiga langkah sederhana</p><h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">Dari folder penuh ke keputusan yang jelas</h2><div className="mt-7 grid gap-4 md:grid-cols-3">{features.map((feature) => <div key={feature.number} className="rounded-2xl border border-[#dce7e1] bg-white p-6"><span className="inline-flex size-10 items-center justify-center rounded-xl bg-[#eaf1ec] font-semibold text-[#285e53]">{feature.number}</span><h3 className="mt-5 text-lg font-bold">{feature.title}</h3><p className="mt-2 text-sm leading-6 text-[#425b55]">{feature.description}</p></div>)}</div></section>
+        <section className="mt-16 border-y border-[#dce7e1] bg-[#eef5ef]">
+          <div className="mx-auto grid max-w-6xl gap-5 px-5 py-12 md:grid-cols-[1fr_1.2fr] md:items-center">
+            <div><p className="text-sm font-semibold text-[#285e53]">Mengapa ByteClean dibuat</p><h2 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">Kurangi data yang tidak perlu, mulai dari perangkat sendiri.</h2></div>
+            <div className="space-y-3 text-[#425b55]"><p>ByteClean membantu Anda meninjau file lokal sebelum membuangnya. Tujuan jangka panjangnya adalah membangun kebiasaan digital yang lebih hemat dan mengurangi data yang disimpan tanpa kebutuhan.</p><p className="text-sm">Yang dapat diukur saat ini adalah ruang lokal yang berhasil dibebaskan. ByteClean belum mengukur penghematan listrik atau emisi pusat data.</p></div>
+          </div>
+        </section>
         <section className="mx-auto grid max-w-6xl gap-8 px-5 py-16 md:grid-cols-3">
           <div><h2 className="text-lg font-semibold">Privasi sejak awal</h2><p className="mt-2 text-slate-600">File diperiksa di perangkatmu. Jika kamu memakai akun organisasi, hanya angka ringkasan yang dikirim.</p></div>
           <div><h2 className="text-lg font-semibold">Keputusan di tangan Anda</h2><p className="mt-2 text-slate-600">Tidak ada file yang tercentang otomatis. Setiap penghapusan memerlukan konfirmasi.</p></div>
-          <div><h2 className="text-lg font-semibold">Dapat dipresentasikan</h2><p className="mt-2 text-slate-600">Mode demo memakai data contoh dan tidak meminta akses ke folder perangkat.</p></div>
+          <div><h2 className="text-lg font-semibold">Mulai dari perangkat sendiri</h2><p className="mt-2 text-slate-600">Pindai folder lokal atau coba mode demo dengan data contoh tanpa meminta akses ke file perangkat.</p></div>
         </section>
       </main>
     </>
