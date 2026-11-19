@@ -1,0 +1,23 @@
+Pernah merasa penyimpanan penuh, tetapi takut menghapus file yang ternyata penting? ByteClean membantu menemukan file yang perlu ditinjau. Pengguna tetap memutuskan apa yang akan dibersihkan.
+
+Untuk mencoba tanpa memberi akses ke folder, kita masuk ke mode demo. Semua file dan ukuran yang tampil di sini adalah contoh. Simulasi ini tidak mengubah file di perangkat.
+
+Setelah pemindaian, ByteClean menampilkan jumlah file yang diperiksa, ukuran total, perkiraan ruang yang mungkin bisa dibebaskan, dan skor kebersihan. Potensi ruang adalah perkiraan; itu belum berarti ruang tersebut sudah benar-benar kosong.
+
+Hasil dibagi menjadi tiga zona. Hijau berisi kandidat pembersihan cepat, seperti salinan kembar tambahan atau file sementara lama. Kuning perlu diperiksa satu per satu karena mungkin masih dipakai. Merah berisi file yang dilindungi dan tidak dapat dihapus melalui ByteClean. Tetap baca nama serta konteks file sebelum bertindak.
+
+Temuan juga dikelompokkan menjadi enam jenis: file kembar, file besar dan lama, file sementara, file pemasangan lama, file kosong, serta nama yang mirip salinan. Satu file bisa masuk lebih dari satu jenis, tetapi potensi ruangnya tidak dihitung ganda.
+
+Di daftar hasil, pengguna dapat mencari nama atau jalur file, mengurutkan hasil, memakai filter, serta mengunduh daftar sebagai CSV. Zona kuning diperiksa satu per satu. Tombol Lindungi memindahkan pilihan ke zona terlindungi pada sesi ini. Tidak ada file yang tercentang otomatis.
+
+Saat sebuah file dipilih, ByteClean langsung menampilkan jumlah file dan total ruang dari pilihan. Zona hijau juga punya pilihan untuk meninjau seluruh kandidat sekaligus, sedangkan zona kuning dipilih satu per satu.
+
+Sekarang saya jalankan simulasi. Satu file contoh dibersihkan, sehingga angka potensi dan skor berubah. Perhatikan: ini hanya perubahan pada data contoh. Tidak ada file perangkat yang terhapus.
+
+Cara menghitung skor tersedia secara terbuka. Skor membandingkan ukuran file yang perlu ditinjau dengan seluruh isi folder pilihan. Skor ini bukan penilaian keamanan file, dan hasil dari folder berbeda tidak selalu bisa dibandingkan.
+
+Pemindaian nyata menyimpan riwayat ringkasan di browser: waktu, jumlah file, potensi ruang, hasil pembersihan, dan aturan yang digunakan. Nama serta isi file tidak disimpan di riwayat. Jika ada file zona kuning, pengingat tinjau ulang muncul di aplikasi setelah sekitar satu bulan ketika aplikasi dibuka kembali.
+
+Untuk file sungguhan, ByteClean hanya membaca folder yang dipilih pengguna. Penghapusan nyata tersedia di Chrome atau Edge desktop, meminta izin tulis dan konfirmasi, serta dapat bersifat permanen. Browser lain tetap bisa memindai, meninjau, dan mengunduh CSV melalui mode baca saja. Jika akun organisasi sudah dihubungkan ke Supabase, admin dapat mengatur aturan pindai serta melihat ringkasan dan tren gabungan tanpa nama atau isi file.
+
+ByteClean: ruang lebih rapi, keputusan tetap di tangan Anda.
