@@ -1,4 +1,4 @@
-Pernah merasa penyimpanan penuh, tetapi takut menghapus file yang ternyata penting? ByteClean membantu menemukan file yang perlu ditinjau. Pengguna tetap memutuskan apa yang akan dibersihkan.
+ByteClean dibuat untuk membantu mengurangi file lokal yang tidak diperlukan. Ini langkah awal menuju kebiasaan digital yang lebih hemat, sambil menjaga keputusan penghapusan tetap di tangan pengguna.
 
 Untuk mencoba tanpa memberi akses ke folder, kita masuk ke mode demo. Semua file dan ukuran yang tampil di sini adalah contoh. Simulasi ini tidak mengubah file di perangkat.
 
@@ -14,10 +14,10 @@ Saat sebuah file dipilih, ByteClean langsung menampilkan jumlah file dan total r
 
 Sekarang saya jalankan simulasi. Satu file contoh dibersihkan, sehingga angka potensi dan skor berubah. Perhatikan: ini hanya perubahan pada data contoh. Tidak ada file perangkat yang terhapus.
 
-Cara menghitung skor tersedia secara terbuka. Skor membandingkan ukuran file yang perlu ditinjau dengan seluruh isi folder pilihan. Skor ini bukan penilaian keamanan file, dan hasil dari folder berbeda tidak selalu bisa dibandingkan.
+Cara menghitung skor tersedia secara terbuka. Skor membandingkan ukuran file yang perlu ditinjau dengan seluruh isi folder pilihan. Skor ini bukan penilaian keamanan file ataupun ukuran penghematan listrik pusat data.
 
 Pemindaian nyata menyimpan riwayat ringkasan di browser: waktu, jumlah file, potensi ruang, hasil pembersihan, dan aturan yang digunakan. Nama serta isi file tidak disimpan di riwayat. Jika ada file zona kuning, pengingat tinjau ulang muncul di aplikasi setelah sekitar satu bulan ketika aplikasi dibuka kembali.
 
 Untuk file sungguhan, ByteClean hanya membaca folder yang dipilih pengguna. Penghapusan nyata tersedia di Chrome atau Edge desktop, meminta izin tulis dan konfirmasi, serta dapat bersifat permanen. Browser lain tetap bisa memindai, meninjau, dan mengunduh CSV melalui mode baca saja. Jika akun organisasi sudah dihubungkan ke Supabase, admin dapat mengatur aturan pindai serta melihat ringkasan dan tren gabungan tanpa nama atau isi file.
 
-ByteClean: ruang lebih rapi, keputusan tetap di tangan Anda.
+ByteClean belum mengukur penghematan energi pusat data. Mari mulai dari data yang benar-benar kita pakai.

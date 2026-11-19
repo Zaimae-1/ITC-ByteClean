@@ -1,6 +1,10 @@
 # ByteClean
 
-ByteClean memindai folder pilihan pengguna di browser, menampilkan kandidat file yang dapat ditinjau, dan menghitung skor kebersihan digital. File tidak diunggah. Pengguna Chrome atau Edge desktop dapat memberi izin tulis dan menghapus file pilihan secara nyata. Browser lain dapat memindai, meninjau, dan mengekspor CSV melalui pemilih folder mode baca.
+ByteClean membantu pengguna mengurangi file lokal yang tidak diperlukan sebagai langkah menuju kebiasaan digital yang lebih hemat. Web memindai folder pilihan pengguna di browser, menampilkan kandidat file yang dapat ditinjau, dan menghitung skor kebersihan digital. File tidak diunggah. Pengguna Chrome atau Edge desktop dapat memberi izin tulis dan menghapus file pilihan secara nyata. Browser lain dapat memindai, meninjau, dan mengekspor CSV melalui pemilih folder mode baca.
+
+## Tujuan dan batas dampak
+
+Tujuan jangka panjang ByteClean adalah ikut mengurangi penumpukan data digital dan dampak penggunaan energi pusat data. Versi ini hanya memeriksa file lokal; tidak terhubung ke Google Drive atau layanan cloud lain. Menghapus file lokal tidak otomatis mengurangi data yang tersimpan di pusat data. Karena itu, ByteClean hanya melaporkan ruang lokal yang berhasil dibebaskan, bukan klaim penghematan listrik atau emisi.
 
 ## Menjalankan
 
