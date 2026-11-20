@@ -27,3 +27,7 @@ ByteClean memeriksa folder lokal yang dipilih pengguna. File tidak diunggah. Rua
 | Build atau tes gagal | Catat pesan pertama yang relevan, ulangi kasus dengan folder uji kecil, perbaiki penyebab, lalu jalankan kembali tes terkait dan build. |
 
 Mode demo di `/scan?demo=1` memakai data sintetis dan tidak menghapus file perangkat. Pengujian otomatis tidak menggantikan pengujian alur folder nyata pada browser sasaran.
+
+## Hasil uji browser, 20 November 2026
+
+Pada mode demo, tombol **Simulasi bersihkan semua** menampilkan konfirmasi 4 file (424,6 MB). Setelah dikonfirmasi, jumlah file contoh berubah dari 11 menjadi 7, skor dari 46 menjadi 57, dan pesan keberhasilan menyatakan tidak ada file perangkat yang berubah. [Lihat tangkapan layar](Verifikasi-simulasi-2026-11-20.jpg).
