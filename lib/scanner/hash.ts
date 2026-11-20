@@ -43,6 +43,7 @@ export interface HashCandidate {
 export async function findDuplicates(
   candidates: HashCandidate[],
   onProgress?: (processedBytes: number, totalBytes: number) => void,
+  onUnreadable?: (id: string) => void,
 ): Promise<Map<string, string>> {
   const bySize = new Map<number, HashCandidate[]>();
   for (const candidate of candidates) {
@@ -55,10 +56,14 @@ export async function findDuplicates(
   for (const [size, group] of bySize) {
     if (group.length < 2) continue;
     for (const candidate of group) {
-      const key = `${size}:${await partialHash(candidate.file)}`;
-      const matches = byPartial.get(key) ?? [];
-      matches.push(candidate);
-      byPartial.set(key, matches);
+      try {
+        const key = `${size}:${await partialHash(candidate.file)}`;
+        const matches = byPartial.get(key) ?? [];
+        matches.push(candidate);
+        byPartial.set(key, matches);
+      } catch {
+        onUnreadable?.(candidate.id);
+      }
     }
   }
 
@@ -72,14 +77,18 @@ export async function findDuplicates(
   const byFullHash = new Map<string, HashCandidate[]>();
   for (const group of toVerify) {
     for (const candidate of group) {
-      const digest = await fullHash(candidate.file, (bytes) => {
-        processedBytes += bytes;
-        onProgress?.(processedBytes, totalBytes);
-      });
-      const key = `${candidate.file.size}:${digest}`;
-      const matches = byFullHash.get(key) ?? [];
-      matches.push(candidate);
-      byFullHash.set(key, matches);
+      try {
+        const digest = await fullHash(candidate.file, (bytes) => {
+          processedBytes += bytes;
+          onProgress?.(processedBytes, totalBytes);
+        });
+        const key = `${candidate.file.size}:${digest}`;
+        const matches = byFullHash.get(key) ?? [];
+        matches.push(candidate);
+        byFullHash.set(key, matches);
+      } catch {
+        onUnreadable?.(candidate.id);
+      }
     }
   }
 

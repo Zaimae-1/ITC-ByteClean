@@ -48,6 +48,7 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
   const [readOnly, setReadOnly] = useState(true);
   const [scannedCount, setScannedCount] = useState(0);
   const [skippedCount, setSkippedCount] = useState(0);
+  const [unreadableHashCount, setUnreadableHashCount] = useState(0);
   const [hashProgress, setHashProgress] = useState({ done: 0, total: 0 });
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [ignoredIds, setIgnoredIds] = useState<Set<string>>(new Set());
@@ -113,6 +114,7 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
     setPhase("collecting");
     setScannedCount(0);
     setSkippedCount(0);
+    setUnreadableHashCount(0);
     setHashProgress({ done: 0, total: 0 });
     setDeletedBytes(0);
     setDeletedCount(0);
@@ -140,6 +142,7 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
         setZoneFilter(freshZones.green.length ? "green" : freshZones.yellow.length ? "yellow" : "red");
         if (freshZones.yellow.length > 0) scheduleYellowReview(completedAt);
         setSkippedCount(response.skippedFiles);
+        setUnreadableHashCount(response.unreadableHashes);
         setPhase("complete");
         setMessage(`Pemindaian selesai. ${response.files.length.toLocaleString("id-ID")} file diperiksa.`);
         const record = {
@@ -231,6 +234,7 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
     setSearch("");
     setDeletedBytes(0);
     setDeletedCount(0);
+    setUnreadableHashCount(0);
     scanRecordPromiseRef.current = null;
     setError("");
     setMessage("Mode demo aktif. Data ini sintetis dan tidak berasal dari perangkat Anda.");
@@ -407,7 +411,7 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
       {hasResults && (
         <>
           <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-slate-600">Folder: <strong className="text-slate-900">{sourceName}</strong>{skippedCount ? ` · ${skippedCount} file tidak dapat dibaca` : ""}</p>
+            <p className="text-sm text-slate-600">Folder: <strong className="text-slate-900">{sourceName}</strong>{skippedCount ? ` · ${skippedCount} file atau folder tidak dapat dibaca` : ""}{unreadableHashCount ? ` · ${unreadableHashCount} file tidak dapat diperiksa sebagai duplikat` : ""}</p>
             <Link href="/score" className="text-sm font-semibold text-teal-700 hover:underline">Bagaimana skor dihitung?</Link>
           </div>
           <section aria-label="Ringkasan pemindaian" className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.35fr]">

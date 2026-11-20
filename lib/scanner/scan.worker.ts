@@ -16,6 +16,7 @@ async function runScan(request: ScanRequest) {
   const { source, settings } = request;
   const collected: CollectedFile[] = [];
   let skippedFiles = 0;
+  const unreadableHashes = new Set<string>();
 
   function add(file: File, path: string, parentDirectory?: FileSystemDirectoryHandle) {
     if (collected.length >= settings.maxFiles) {
@@ -47,19 +48,24 @@ async function runScan(request: ScanRequest) {
     ];
     while (stack.length) {
       const current = stack.pop()!;
-      for await (const [name, handle] of current.handle as FileSystemDirectoryHandle & AsyncIterable<[string, FileSystemHandle]>) {
-        const path = current.path ? `${current.path}/${name}` : name;
-        if (handle.kind === "directory") {
-          stack.push({ handle: handle as FileSystemDirectoryHandle, path });
-          continue;
+      try {
+        for await (const [name, handle] of current.handle as FileSystemDirectoryHandle & AsyncIterable<[string, FileSystemHandle]>) {
+          const path = current.path ? `${current.path}/${name}` : name;
+          if (handle.kind === "directory") {
+            stack.push({ handle: handle as FileSystemDirectoryHandle, path });
+            continue;
+          }
+          try {
+            const file = await (handle as FileSystemFileHandle).getFile();
+            add(file, path, current.handle);
+          } catch (error) {
+            if (error instanceof Error && error.message.startsWith("Batas ")) throw error;
+            skippedFiles += 1;
+          }
         }
-        try {
-          const file = await (handle as FileSystemFileHandle).getFile();
-          add(file, path, current.handle);
-        } catch (error) {
-          if (error instanceof Error && error.message.startsWith("Batas ")) throw error;
-          skippedFiles += 1;
-        }
+      } catch (error) {
+        if (error instanceof Error && error.message.startsWith("Batas ")) throw error;
+        skippedFiles += 1;
       }
     }
   }
@@ -76,6 +82,7 @@ async function runScan(request: ScanRequest) {
         totalBytes,
       });
     },
+    (id) => unreadableHashes.add(id),
   );
   for (const { result } of collected) {
     const group = duplicates.get(result.id);
@@ -84,7 +91,7 @@ async function runScan(request: ScanRequest) {
       result.categories.unshift("duplicate");
     }
   }
-  send({ type: "complete", files: collected.map(({ result }) => result), skippedFiles });
+  send({ type: "complete", files: collected.map(({ result }) => result), skippedFiles, unreadableHashes: unreadableHashes.size });
 }
 
 self.onmessage = (event: MessageEvent<ScanRequest>) => {

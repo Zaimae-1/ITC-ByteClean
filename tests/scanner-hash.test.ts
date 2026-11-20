@@ -24,3 +24,17 @@ test("same size and partial content do not imply a duplicate", async () => {
   assert.equal(groups.get("a"), groups.get("c"));
   assert.equal(groups.has("b"), false);
 });
+
+test("unreadable hash candidate does not hide other duplicate results", async () => {
+  const bad = new File(["same"], "bad.txt");
+  Object.defineProperty(bad, "stream", { value: () => { throw new Error("File cannot be read"); } });
+  const unreadable: string[] = [];
+  const groups = await findDuplicates([
+    { id: "bad", file: bad },
+    { id: "a", file: new File(["same"], "a.txt") },
+    { id: "b", file: new File(["same"], "b.txt") },
+  ], undefined, (id) => unreadable.push(id));
+  assert.deepEqual(unreadable, ["bad"]);
+  assert.equal(groups.get("a"), groups.get("b"));
+  assert.equal(groups.has("bad"), false);
+});
