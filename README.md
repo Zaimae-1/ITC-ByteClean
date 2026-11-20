@@ -49,3 +49,4 @@ npm run build
 Skema SQL dan alur akun memerlukan project Supabase aktif untuk pengujian langsung. Tanpa kredensial, build dan uji lokal tidak membuktikan integrasi cloud.
 
 Dokumen analisis awal ada di `docs/Analisis Spesifikasi ByteClean.docx`.
+Langkah uji tiap tahap dan penanganan error ada di `docs/Verifikasi dan Penanganan Error.md`.
