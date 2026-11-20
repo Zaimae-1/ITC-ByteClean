@@ -15,10 +15,10 @@ export default function Home() {
           <div className="mx-auto grid max-w-6xl gap-12 px-5 py-14 lg:grid-cols-[1fr_0.95fr] lg:items-center lg:py-20">
             <div>
               <h1 className="max-w-3xl text-4xl font-bold leading-[1.15] tracking-tight text-[#243331] sm:text-5xl">
-                Kurangi file tak perlu. <span className="text-[#2b6d62]">Mulai dari folder Anda hari ini.</span>
+                Beri ruang untuk yang penting. <span className="text-[#2b6d62]">Bereskan file yang tak perlu.</span>
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-[#425b55]">
-                Temukan file kembar dan file lama yang patut ditinjau. Pilih sendiri mana yang ingin disimpan atau dibersihkan, tanpa mengunggah file Anda.
+                ByteClean membantu menemukan file kembar dan file lama di folder pilihan Anda. Tinjau hasilnya, lindungi yang penting, lalu putuskan sendiri apa yang ingin dibersihkan.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/scan" className="inline-flex min-h-12 items-center rounded-xl bg-[#2e7066] px-6 py-3 font-semibold text-white hover:bg-[#24594f]">Pindai folder sekarang</Link>
