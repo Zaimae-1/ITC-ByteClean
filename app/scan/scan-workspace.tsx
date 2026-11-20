@@ -121,9 +121,16 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
     scanRecordPromiseRef.current = null;
     setError("");
     setMessage("");
-    const worker = new Worker(new URL("../../lib/scanner/scan.worker.ts", import.meta.url), {
-      type: "module",
-    });
+    let worker: Worker;
+    try {
+      worker = new Worker(new URL("../../lib/scanner/scan.worker.ts", import.meta.url), {
+        type: "module",
+      });
+    } catch {
+      setError("Pemindaian tidak dapat dimulai di browser ini. Coba muat ulang halaman atau gunakan browser lain.");
+      setPhase("idle");
+      return;
+    }
     workerRef.current = worker;
     worker.onmessage = (event: MessageEvent<ScanResponse>) => {
       const response = event.data;
@@ -172,7 +179,14 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
       worker.terminate();
       workerRef.current = null;
     };
-    worker.postMessage({ type: "start", source, settings });
+    try {
+      worker.postMessage({ type: "start", source, settings });
+    } catch {
+      worker.terminate();
+      workerRef.current = null;
+      setPhase("idle");
+      setError("Folder tidak dapat dikirim ke proses pemindaian. Coba pilih folder lagi atau gunakan mode baca saja.");
+    }
   }
 
   async function pickFolder() {
