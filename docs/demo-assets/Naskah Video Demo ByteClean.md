@@ -2,11 +2,11 @@
 
 **Durasi sasaran:** sekitar 3–4 menit  
 **Format:** rekam layar desktop, 16:9, dengan narasi bahasa Indonesia.  
-**Bahan gambar:** sebelas JPEG bernomor `01` sampai `11` di folder ini. Angka pada mode demo adalah data contoh. Gambar `11` memperlihatkan tujuan lingkungan ByteClean. Gambar riwayat tidak disertakan karena isi riwayat bergantung pada pemindaian lokal di browser perekam.
+**Bahan gambar:** sebelas JPEG bernomor `01` sampai `11` di folder ini. Angka pada mode demo adalah data contoh. Gambar `11` memperlihatkan bagian SDGs 12 dan tiga langkah ByteClean. Gambar riwayat tidak disertakan karena isi riwayat bergantung pada pemindaian lokal di browser perekam.
 
 | Waktu | Tampilan dan tindakan | Narasi yang dibacakan |
 |---|---|---|
-| 00:00–00:18 | Beranda (`01-beranda.jpg`), lalu bagian **Mengapa ByteClean dibuat** (`11-tujuan-lingkungan.jpg`). Arahkan kursor ke **Coba demo tanpa pilih folder**. | “ByteClean dibuat untuk membantu mengurangi file lokal yang tidak diperlukan. Ini langkah awal menuju kebiasaan digital yang lebih hemat, sambil menjaga keputusan penghapusan tetap di tangan pengguna.” |
+| 00:00–00:18 | Beranda (`01-beranda.jpg`), lalu bagian **SDGs 12** dan tiga langkah (`11-tujuan-lingkungan.jpg`). Arahkan kursor ke **Coba demo tanpa pilih folder**. | “Kurangi file tak perlu, mulai dari folder Anda hari ini. ByteClean membantu Anda memilih folder, meninjau hasil, lalu memutuskan sendiri apa yang dibersihkan. Kebiasaan menyimpan seperlunya sejalan dengan semangat SDGs 12.” |
 | 00:18–00:33 | Klik **Coba demo tanpa pilih folder**. Tampilkan label **Mode demo**. | “Untuk mencoba tanpa memberi akses ke folder, kita masuk ke mode demo. Semua file dan ukuran yang tampil di sini adalah contoh. Simulasi ini tidak mengubah file di perangkat.” |
 | 00:33–00:55 | Ringkasan pindai (`02-hasil-pindai.jpg`). Sorot jumlah file, ukuran, potensi ruang, dan skor. | “Setelah pemindaian, ByteClean menampilkan jumlah file yang diperiksa, ukuran total, perkiraan ruang yang mungkin bisa dibebaskan, dan skor kebersihan. Potensi ruang adalah perkiraan; itu belum berarti ruang tersebut sudah benar-benar kosong.” |
 | 00:55–01:20 | Gulir ke tiga zona (`03-tiga-zona.jpg`). Sorot tiap kartu. | “Hasil dibagi menjadi tiga zona. Hijau berisi kandidat pembersihan cepat, seperti salinan kembar tambahan atau file sementara lama. Kuning perlu diperiksa satu per satu karena mungkin masih dipakai. Merah berisi file yang dilindungi dan tidak dapat dihapus melalui ByteClean. Tetap baca nama serta konteks file sebelum bertindak.” |
