@@ -1,4 +1,4 @@
-Kurangi file tak perlu, mulai dari folder Anda hari ini. ByteClean membantu Anda memilih folder, meninjau hasil, lalu memutuskan sendiri apa yang dibersihkan. Kebiasaan menyimpan seperlunya sejalan dengan semangat SDGs 12.
+Beri ruang untuk yang penting. Bereskan file yang tak perlu. ByteClean membantu menemukan file yang patut ditinjau, sementara keputusan untuk membersihkannya tetap di tangan Anda. Kebiasaan menyimpan seperlunya sejalan dengan semangat SDGs 12.
 
 Untuk mencoba tanpa memberi akses ke folder, kita masuk ke mode demo. Semua file dan ukuran yang tampil di sini adalah contoh. Simulasi ini tidak mengubah file di perangkat.
 
