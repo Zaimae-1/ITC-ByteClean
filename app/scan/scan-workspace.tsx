@@ -338,7 +338,7 @@ export function ScanWorkspace({ initialDemo, settings }: { initialDemo: boolean;
     setPhase("deleting");
     let result: Awaited<ReturnType<typeof deleteSelectedFiles>>;
     try {
-      result = await deleteSelectedFiles(rootHandle, selectedFiles);
+      result = await deleteSelectedFiles(rootHandle, selectedFiles, files);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Browser tidak dapat meminta izin tulis untuk folder ini.");
       setPhase("complete");
